@@ -16,8 +16,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float[] AttackResetTimes;
     [SerializeField] private float[] comboResetTimes;
     private Vector3 input3D;
-    private Coroutine comboCoroutine;
-    private Coroutine attackCoroutine;
+    private Coroutine attackCooldownCoroutine;
+    private Coroutine comboResetCoroutine;
     public PlayerControls playerControls;
     private InputAction move;
     private InputAction basicAtk;
@@ -92,8 +92,17 @@ public class PlayerController : MonoBehaviour
                 comboCount = 1;
             Debug.Log(comboCount);
             animator.SetTrigger("Attack" + comboCount);
-            CooldownStart_Reset(comboResetTimes[comboCount - 1]);
-            AttackStart_Reset(AttackResetTimes[comboCount - 1]);
+            
+            if (attackCooldownCoroutine != null)
+                StopCoroutine(attackCooldownCoroutine);
+            attackCooldownCoroutine = StartCoroutine(AttackCooldown(AttackResetTimes[comboCount - 1]));
+
+
+            if (comboResetCoroutine != null)
+                StopCoroutine(comboResetCoroutine);
+            comboResetCoroutine = StartCoroutine(ComboResetTimer(comboResetTimes[comboCount - 1]));
+
+            
             Invoke(nameof(DisableCollision), 0.7f);
             comboCount++;
         }
@@ -104,34 +113,16 @@ public class PlayerController : MonoBehaviour
         swordCollider.enabled = false;
     }
 
-    public void AttackStart_Reset(float duration)
-    {
-        if (attackCoroutine != null)
-        {
-            StopCoroutine(attackCoroutine);
-        }
-        attackCoroutine = StartCoroutine(EnableAttack(duration));
-    }
+    private IEnumerator AttackCooldown(float duration)
+{
+    yield return new WaitForSeconds(duration);
+    canAttack = true;
+}
 
-    private IEnumerator EnableAttack(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        attackCoroutine = null;
-        canAttack = true;
-    }
-    public void CooldownStart_Reset(float duration)
-    {
-        if (comboCoroutine != null)
-            StopCoroutine(comboCoroutine);
-
-        comboCoroutine = StartCoroutine(TimerRoutine(duration));
-    }
-
-    private IEnumerator TimerRoutine(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        comboCoroutine = null;
-        comboCount = 1;
-        Debug.Log("Reset");
-    }
+private IEnumerator ComboResetTimer(float duration)
+{
+    yield return new WaitForSeconds(duration);
+    comboCount = 1;
+    Debug.Log("Combo reset due to inactivity");
+}
 }
