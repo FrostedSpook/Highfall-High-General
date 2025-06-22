@@ -8,11 +8,15 @@ public class CharacterStats : MonoBehaviour
 
     public int health;
     public int maxhealth;
+    public bool isHit;
 
     //function to be called by other scripts
     public void DealDamage(CharacterStats target, int amount)
     {
         target.TakeDamage(amount);
+
+        isHit = true;
+        Invoke(nameof(CanBeHit), 0.7f);
     }
 
     void TakeDamage(int amount)
@@ -30,6 +34,11 @@ public class CharacterStats : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+    }
+
+    private void CanBeHit()
+    {
+        isHit = false;
     }
 
 }
