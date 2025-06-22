@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyCollision : MonoBehaviour
 {
-    public int damage;
+    [SerializeField] private int damage;
     bool isInCollision = false;
     private void OnTriggerEnter(Collider other)
     {

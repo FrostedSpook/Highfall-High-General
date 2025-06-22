@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class PlayerCollision : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] private int damage;
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log("Hello World");
+            CharacterStats stats = other.GetComponent<CharacterStats>();
+            if (stats.isHit == false)
+                stats.DealDamage(stats, damage);
         }
     }
+    
 }
