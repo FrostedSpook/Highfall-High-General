@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class EnemyCollision : MonoBehaviour
 {
-    [SerializeField] private int damage;
+    public int minDamage;
+    public int maxDamage;
     bool isInCollision = false;
     private void OnTriggerEnter(Collider other)
     {
@@ -14,7 +15,7 @@ public class EnemyCollision : MonoBehaviour
             isInCollision = true;
             CharacterStats stats = other.GetComponent<CharacterStats>();
 
-            stats.DealDamage(stats, damage);
+            stats.DealDamage(stats, minDamage, maxDamage);
         }
     }
     private void OnTriggerExit(Collider other)

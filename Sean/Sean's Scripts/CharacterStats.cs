@@ -11,8 +11,9 @@ public class CharacterStats : MonoBehaviour
     public bool isHit;
 
     //function to be called by other scripts
-    public void DealDamage(CharacterStats target, int amount)
+    public void DealDamage(CharacterStats target, int min, int max)
     {
+        int amount = Random.Range(min, max);
         target.TakeDamage(amount);
 
         isHit = true;

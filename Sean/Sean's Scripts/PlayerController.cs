@@ -9,7 +9,7 @@ using UnityEngine.TextCore.Text;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private Collider swordCollider;
+    [SerializeField] private GameObject swordCollider;
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private float rotationSpeed = 360f;
     [SerializeField] private float[] AttackResetTimes;
@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private int comboCount = 1;
     private bool canAttack = true;
     Animator animator;
+    PlayerCollision collisionScript;
     private void Awake()
     {
         playerControls = new PlayerControls();
@@ -39,6 +40,7 @@ public class PlayerController : MonoBehaviour
         move.canceled += GatherInput;
         basicAtk.performed += BasicAttack;
         animator = gameObject.GetComponent<Animator>();
+        collisionScript = swordCollider.GetComponent<PlayerCollision>();
     }
 
     private void OnDisable()
@@ -88,9 +90,14 @@ public class PlayerController : MonoBehaviour
             return;
 
         canAttack = false;
-        swordCollider.enabled = true;
+        swordCollider.GetComponent<Collider>().enabled = true;
+        
         if (comboCount >= 4)
             comboCount = 1;
+
+        int baseDmg = comboCount * 10;
+        collisionScript.minDamage = baseDmg;
+        collisionScript.maxDamage = baseDmg + (comboCount * 5);
         Debug.Log(comboCount);
         animator.SetTrigger("Attack" + comboCount);
 
@@ -111,7 +118,7 @@ public class PlayerController : MonoBehaviour
 
     private void DisableCollision()
     {
-        swordCollider.enabled = false;
+        swordCollider.GetComponent<Collider>().enabled = false;
     }
 
     private IEnumerator AttackCooldown(float duration)
