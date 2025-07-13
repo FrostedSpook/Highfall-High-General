@@ -18,7 +18,6 @@ public class CameraCulling : MonoBehaviour
     {
         if (!player) return;
 
-        Debug.Log("CameraCulling is active.");  // Confirm script is running
         HandleObstructions();
     }
 
@@ -35,17 +34,15 @@ public class CameraCulling : MonoBehaviour
         Vector3 start = transform.position;
         Vector3 end = player.position;
 
-        Debug.Log($"Capsule from {start} to {end}, radius {visionRadius}");
 
         Collider[] hits = Physics.OverlapCapsule(start, end, visionRadius, obstructionMask);
-        Debug.Log($"Capsule hit {hits.Length} objects.");
 
         foreach (var col in hits)
         {
             Renderer rend = col.GetComponent<Renderer>();
             if (rend == null || hiddenRenderers.Contains(rend)) continue;
 
-            Debug.Log($"Fading: {rend.gameObject.name}");
+           // Debug.Log($"Fading: {rend.gameObject.name}");
 
             // Save original materials for unfading
             if (!originalMaterials.ContainsKey(rend))
