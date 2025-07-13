@@ -6,9 +6,10 @@ using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
-
+    public delegate void OnHealthChanged(int health, int maxHealth);
+    public OnHealthChanged healthChanged;
     public int health;
-    public int maxhealth;
+    public int maxHealth;
     public bool isHit;
 
     public GameObject dmgPop;
@@ -29,6 +30,7 @@ public class CharacterStats : MonoBehaviour
     void TakeDamage(int amount)
     {
         SetHealth(health - amount);
+        healthChanged?.Invoke(health, maxHealth);
     }
 
     void SetHealth(int newAmount)

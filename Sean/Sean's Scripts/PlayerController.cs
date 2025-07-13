@@ -109,21 +109,20 @@ public class PlayerController : MonoBehaviour
         if (comboResetCoroutine != null)
             StopCoroutine(comboResetCoroutine);
         comboResetCoroutine = StartCoroutine(ComboResetTimer(comboResetTimes[comboCount - 1]));
-
-
-        Invoke(nameof(DisableCollision), 0.7f);
+        
         comboCount++;
 
     }
 
     private void DisableCollision()
     {
-        swordCollider.GetComponent<Collider>().enabled = false;
+        
     }
 
     private IEnumerator AttackCooldown(float duration)
     {
         yield return new WaitForSeconds(duration);
+        swordCollider.GetComponent<Collider>().enabled = false;
         canAttack = true;
     }
 
