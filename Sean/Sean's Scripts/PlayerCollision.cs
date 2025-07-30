@@ -5,14 +5,15 @@ using UnityEngine;
 
 public class PlayerCollision : MonoBehaviour
 {
-    [SerializeField] private int damage;
+    public int minDamage;
+    public int maxDamage;
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
             CharacterStats stats = other.GetComponent<CharacterStats>();
             if (stats.isHit == false)
-                stats.DealDamage(stats, damage);
+                stats.DealDamage(stats, minDamage, maxDamage);
         }
     }
     
